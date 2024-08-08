@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Child-Mapper">
+	<sql id="search">
+		<if test="searchType == 'n'.toString()">
+			and child_name like '%'||#{keyword}||'%'
+		</if>
+		<if test="searchType == 'b'.toString()">
+			and to_Char(child_birth,"yyyy-MM-dd") = #{keyword}
+		</if>
+	</sql>
+
+
+	<select id="selectSearchChildList" parameterType="pageMaker"
+		resultType="child">
+		SELECT child.*, parents.parents_name
+		FROM child, parents
+		where
+		child.parents_id = parents.parents_id
+		<include refid="search" />
+		ORDER BY child.child_name ASC
+	</select>
+
+	<select id="findByParentsID"
+		resultType="com.spring.dto.ChildVO">
+		SELECT *
+		FROM CHILD
+		WHERE PARENTS_ID = #{parents_id}
+	</select>
+
+	
+	<select id="selectParentPhoneByChildId" resultType="string">
+		SELECT parents_phone
+		FROM parents
+		WHERE parents_id = (
+		SELECT parents_id
+		FROM child
+		WHERE child_id = #{child_id}
+		)
+	</select>
+
+	
+	<select id="selectSearchChildListCount"
+		parameterType="pageMaker" resultType="int">
+		select count(*)
+		from child
+		<include refid="search" />
+	</select>
+
+
+	<select id="selectChildList" parameterType="pageMaker2" resultType="child">
+		select * from child order by station_num
+	</select>
+	<select id="selectChildListCount" parameterType="pageMaker2" resultType="int">
+		SELECT count(*)
+		FROM child
+		where station_num IS NOT NULL
+	</select>
+
+	<select id="selectChildById" resultType="child">
+		select * from child
+		where child_id=#{child_id}
+	</select>
+
+	<select id="selectChildIdSeqNextVal" resultType="int">
+		select
+		child_id_seq.nextval from dual
+	</select>
+
+
+	<insert id="insertChild" parameterType="child">
+		insert into
+		child(child_id, child_name, child_birth, child_picture, parents_id)
+		values(#{child_id}, #{child_name}, #{child_birth}, #{child_picture},
+		#{parents_id})
+	</insert>
+
+
+	<update id="updateChild" parameterType="child">
+		update child
+		set
+		child_picture=#{child_picture},child_name=#{child_name}
+		where child_id=#{child_id}
+	</update>
+
+	<delete id="deleteChild" parameterType="int">
+		delete from child
+		where
+		child_id=#{child_id}
+	</delete>
+
+
+</mapper>
+
+

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Boarding-Mapper">
+
+	<sql id="search">
+		<if test="searchType == 'c'.toString()">
+			where b.child_name like '%'||#{keyword}||'%'
+		</if>
+		<if test="searchType == 'p'.toString()">
+			where p.parents_name like '%'||#{keyword}||'%'
+		</if>
+		<if test="searchType == 'n'.toString()">
+			where b.station_num like '%'||#{keyword}||'%'
+		</if>
+		<if test="searchType == 's'.toString()">
+			where s.station_name like '%'||#{keyword}||'%'
+		</if>
+		<if test="searchType == 'd'.toString()">
+			where b.up_time like '%'||#{keyword}||'%'
+		</if>
+	</sql>
+	
+	<!-- boarding -->
+	<!-- teacher -->
+	<insert id="insertBoarding" parameterType="boarding">
+		INSERT INTO
+		boarding(child_id, child_name, station_num, belt_status, boarding_status)
+		VALUES(#{child_id}, #{child_name}, #{station_num}, #{belt_status}, #{boarding_status})
+	</insert>
+	
+	<delete id="deleteBoardingByToday" parameterType="HashMap">
+	    DELETE FROM boarding
+		WHERE child_id = #{child_id} AND TO_CHAR(up_time, 'YY/MM/DD') = #{up_time}
+	</delete>
+
+	
+	<!-- main  -->
+	<!-- 
+	<select id="selectBoardingChild" parameterType="pageMaker" resultType="child">
+		SELECT *
+		FROM child
+		WHERE child_id IN (
+			SELECT child_id
+			FROM boarding
+			WHERE TO_CHAR(up_time, 'YY/MM/DD') = TO_CHAR(SYSDATE, 'YY/MM/DD')
+		)
+		<include refid="search"/>
+		ORDER BY up_time desc
+	</select>
+	 -->
+	 
+	 <select id="selectBoardingByChildId" resultType="boarding">
+		select * 
+		from boarding
+		where child_id = #{child_id} and TO_CHAR(up_time, 'YY/MM/DD') = TO_CHAR(SYSDATE, 'YY/MM/DD')
+	</select>
+	
+	<update id="updateBoardingOff" parameterType="boarding">
+		UPDATE boarding
+		set belt_status = '0', boarding_status = '0'
+		where TO_CHAR(up_time, 'YY/MM/DD') = TO_CHAR(SYSDATE, 'YY/MM/DD')
+	</update>
+	 
+	 
+	<select id="selectBoardingChild" parameterType="pageMaker" resultType="boarding">
+		SELECT b.*, c.child_picture
+		FROM boarding b
+		JOIN child c ON b.child_id = c.child_id
+		WHERE TO_CHAR(up_time, 'YY/MM/DD') = TO_CHAR(SYSDATE, 'YY/MM/DD')
+		ORDER BY up_time DESC
+	</select>
+	
+	<select id="selectBoardingChildCount" parameterType="pageMaker" resultType="int">
+		SELECT count(*)
+		FROM boarding
+		WHERE TO_CHAR(up_time, 'YY/MM/DD') = TO_CHAR(SYSDATE, 'YY/MM/DD')
+	</select>
+	
+			
+	<!-- history -->
+	<select id="BoardingHistoryList" parameterType="pageMaker" resultType="boarding">
+		SELECT b.child_name,
+				b.station_num,
+				b.up_time,
+				s.station_name,
+				p.parents_name
+		FROM boarding b
+		JOIN child c ON b.child_id = c.child_id
+		JOIN parents p ON c.parents_id = p.parents_id
+		JOIN station s ON b.station_num = s.station_num
+		<include refid="search"/>
+		ORDER BY b.up_time desc
+	</select>
+	
+	<select id="BoardingHistoryCount" parameterType="pageMaker" resultType="int">
+		SELECT COUNT(*)
+		FROM boarding
+	</select>
+</mapper>

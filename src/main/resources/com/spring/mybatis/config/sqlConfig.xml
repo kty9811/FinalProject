@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+
+	<typeAliases>
+		<typeAlias type="java.lang.String" alias="str" />
+		<typeAlias type="java.lang.Integer" alias="int" />
+
+		<typeAlias type="com.spring.dto.ParentsVO" alias="parents" />
+		<typeAlias type="com.spring.dto.ChildVO" alias="child" />
+
+		<typeAlias type="com.spring.dto.EmployeeVO" alias="employee" />
+		<typeAlias type="com.spring.dto.BoardingVO" alias="boarding" />
+		<typeAlias type="com.spring.dto.StationVO" alias="station" />
+		<typeAlias type="com.spring.dto.GuestbookVO" alias="guestbook"/>
+		<typeAlias type="com.spring.dto.NoticeVO" alias="notice" />
+		<typeAlias type="com.spring.dto.AttachVO" alias="attach"/>
+		<typeAlias type="com.spring.dto.LocationVO" alias="location"/>
+		<typeAlias type="com.spring.command.PageMaker" alias="pageMaker" />
+		<typeAlias type="com.spring.command.PageMaker2" alias="pageMaker2" />
+		<typeAlias type="com.spring.command.PageMaker3" alias="pageMaker3" />
+		<typeAlias type="com.spring.dto.EventVO" alias="event"/>
+		
+	</typeAliases>
+
+</configuration>

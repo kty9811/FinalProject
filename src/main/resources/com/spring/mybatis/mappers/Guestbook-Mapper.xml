@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="Guestbook-Mapper">
+  	
+  	<sql id="search">
+  		
+  		<if test="searchType == 'w'.toString()">
+  			and gbwriter like '%'||#{keyword}||'%'
+  		</if>
+  		<if test="searchType == 'c'.toString()">
+  			and gbcontent like '%'||#{keyword}||'%'
+  		</if>
+  		
+  		<if test="searchType == 'cw'.toString()">
+  			and (
+			gbwriter like '%'||#{keyword}||'%'
+			or
+			gbcontent like '%'||#{keyword}||'%'						
+			)		
+  		</if>
+  		<if test="searchType == 'tcw'.toString()">
+			and (
+			gbwriter like '%'||#{keyword}||'%'
+			or
+			gbcontent like '%'||#{keyword}||'%'						
+			)			
+		</if>
+  	</sql>
+  	<select id="selectSearchGuestbookList" resultType="guestbook">
+  		select *
+		from(
+		    select rownum as rnum,SearchGuestbookResult.*
+		    from ( 
+		    	select * 
+				from guestbook
+				where pno is not null
+  		<include refid="search"/>
+  		order by pno desc
+  		)  SearchGuestbookResult
+  		 <![CDATA[
+		    where rownum <= #{endRow}		    
+		)		 
+		where rnum > #{startRow}		
+		 ]]>
+  	</select>
+  	
+  	<select id="selectSearchGuestbookListCount" resultType="int">
+  		select
+  		count(*)
+  		from guestbook
+  		where pno is not null
+  		<include refid="search"/>
+  	</select>
+  	<select id="selectGuestbookByPno" parameterType="int" resultType="Guestbook">
+  		select
+  		*
+  		from guestbook
+  		where pno=#{pno}
+  	</select>
+  	
+  	<select id="selectGuestbookSequenceNextValue" resultType="int">
+  		select guestbook_seq.nextVal as pno from dual
+  	</select>
+  	
+  	
+  	<insert id="insertGuestbook" parameterType="guestbook">
+  		insert into
+  		guestbook(pno,gbwriter,gbcontent)
+  		values(#{pno},#{gbwriter},#{gbcontent})
+  	</insert>
+  	
+  	<update id="updateGuestbook" parameterType="guestbook">
+  		update guestbook
+  		set
+  		gbcontent=#{gbcontent}
+  		where pno=#{pno}
+  	</update>
+  	
+  	<update id="deleteGuestbook" parameterType="int">
+  		delete
+  		from guestbook
+  		where pno=#{pno}
+  	</update>
+  </mapper>

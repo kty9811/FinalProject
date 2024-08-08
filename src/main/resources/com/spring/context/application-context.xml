@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+	<bean id="picturePath" class="java.lang.String">
+		<constructor-arg value="${savePath.child.picture}" />      
+	</bean>
+	
+	<bean id="noticeSavedFilePath"  class="java.lang.String">
+		<constructor-arg value="${savedPath.notice}" /> 
+	</bean>
+
+	<!-- DAO -->
+	<bean id="employeeDAO" class="com.spring.dao.EmployeeDAOImpl"
+		p:sqlSession-ref="sqlSession" />
+		
+	<bean id="parentsDAO"
+		class="com.spring.dao.ParentsDAOImpl"
+		p:sqlSession-ref="sqlSession"/>
+		
+	<bean id="locationDAO" class="com.spring.dao.LocationDAOImpl"
+		p:sqlSession-ref="sqlSession"/>
+		
+	<bean id="searchEmployeeDAO"
+		class="com.spring.dao.SearchEmployeeDAOImpl"
+		p:sqlSession-ref="sqlSession" />
+
+	<bean id="stationDAO" class="com.spring.dao.StationDAOImpl"
+		p:sqlSession-ref="sqlSession" />
+
+	<bean id="boardingDAO" class="com.spring.dao.BoardingDAOImpl"
+      p:sqlSession-ref="sqlSession" />
+      
+     <bean id="eventDAO" class="com.spring.dao.EventDAOImpl"
+     	p:sqlSession-ref="sqlSession"/>
+      
+      
+    <bean id="boardingService"
+      class="com.spring.service.BoardingServiceImpl"
+      p:boardingDAO-ref="boardingDAO" />
+      
+      
+	<bean id="searchparentsDAO"
+		class="com.spring.dao.SearchParentsDAOImpl"
+		p:searchDAOSqlSession-ref="sqlSession" />
+
+	<bean id="searchparentsService"
+		class="com.spring.service.SearchParentsServiceImpl"
+		p:searchParentsDAO-ref="searchparentsDAO" />
+
+
+	<!-- Service -->
+	
+	<bean id="eventService"
+    	class="com.spring.service.EventServiceImpl"
+    	p:eventDAO-ref="eventDAO"/>
+    	
+	<bean id="locationService"
+		class="com.spring.service.LocationServiceImpl"
+		p:locationDAO-ref="locationDAO"/>
+	<bean id="employeeService"
+		class="com.spring.service.EmployeeServiceImpl"
+		p:employeeDAO-ref="employeeDAO" />
+
+	<bean id="searchEmployeeService"
+		class="com.spring.service.SearchEmployeeServiceImpl"
+		p:employeeDAO-ref="employeeDAO"
+		p:searchEmployeeDAO-ref="searchEmployeeDAO" />
+
+	<bean id="stationService"
+		class="com.spring.service.StationServiceImpl"
+		p:stationDAO-ref="stationDAO" />
+
+	<bean id="searchchildDAO"
+		class="com.spring.dao.SearchChildDAOImpl"
+		p:searchDAOSqlSession-ref="sqlSession" />
+
+	<bean id="searchchildService"
+		class="com.spring.service.SearchChildServiceImpl"
+		p:boardingDAO-ref="boardingDAO"
+		p:searchChildDAO-ref="searchchildDAO" />
+		
+	<bean id="parentsService"
+		class="com.spring.service.ParentsServiceImpl"
+		p:parentsDAO-ref="parentsDAO"/>
+		
+		
+	<bean id="guestbookDAO"
+		class="com.spring.dao.GuestbookDAOImpl"
+		p:sqlSession-ref="sqlSession" />
+		
+		
+	<bean id="guestbookService" 
+		class="com.spring.service.GuestbookServiceImpl"
+		p:guestbookDAO-ref="guestbookDAO"
+		 /> 
+		 
+	<bean id="noticeDAO"
+		class="com.spring.dao.NoticeDAOImpl"
+		p:sqlSession-ref="sqlSession" />
+		
+	<bean id="attachDAO"
+	    class="com.spring.dao.AttachDAOImpl"
+	    p:sqlSession-ref="sqlSession" />
+		
+	<bean id="noticeService" 
+		class="com.spring.service.NoticeServiceImpl"
+		p:noticeDAO-ref="noticeDAO"
+		p:attachDAO-ref="attachDAO"
+		 />
+
+</beans>
+
+
+
+
+
+

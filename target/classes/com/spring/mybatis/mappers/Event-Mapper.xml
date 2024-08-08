@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Event-Mapper">
+
+	<select id="selectEventList" parameterType="pageMaker3" resultType="event">
+		select * from event
+		order by event_time desc
+	</select>
+	
+	<select id="selectEventListCount" parameterType="pageMaker3" resultType="int">
+		SELECT count(*)
+		FROM event
+		where num IS NOT NULL
+	</select>
+	
+	<select id="selectEventById" resultType="event">
+		select * from event
+		where num=#{num}
+	</select>
+	
+
+</mapper>
+
+

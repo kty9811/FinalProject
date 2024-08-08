@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Parents-Mapper">
+	<sql id="search">
+
+		<if test="searchType == 'pn'.toString()">
+			where parents_name like '%'||#{keyword}||'%'
+		</if>
+		<if test="searchType == 'p'.toString()">
+			where prents_phone like '%'||#{keyword}||'%'
+		</if>
+
+	</sql>
+
+	<select id="selectSearchParentsList" parameterType="pageMaker"
+		resultType="parents">
+		select *
+		from parents
+		<include refid="search" />
+		order by parents_REGDATE desc
+	</select>
+	<select id="selectSearchParentsListCount"
+		parameterType="pageMaker" resultType="int">
+		select count(*)
+		from parents
+		<include refid="search" />
+	</select>
+
+
+
+	<select id="selectParentsList" resultType="parents">
+		SELECT parents.*,
+		child.child_name, child.child_birth
+		FROM parents
+		JOIN child
+		ON
+		parents.parents_id = child.parents_id
+	</select>
+
+	<select id="selectParentsById" resultType="parents">
+		select * 
+		from parents
+		where parents_id=#{parents_id,jdbcType=VARCHAR}
+	</select>
+
+
+
+	<insert id="insertParents" parameterType="parents">
+		insert into
+		parents(parents_name, parents_id, parents_pwd, parents_relation, parents_phone)
+		values(#{parents_name}, #{parents_id}, #{parents_pwd}, #{parents_relation}, #{parents_phone})
+	</insert>
+
+	<update id="updateParents" parameterType="parents">
+		update Parents 
+		set 
+		parents_pwd=#{parents_pwd},parents_name=#{parents_name},
+		parents_phone=#{parents_phone},parents_relation=#{parents_relation}
+		where parents_id=#{parents_id}
+	</update>
+
+	<delete id="deleteParents" parameterType="str">
+		delete from Child
+		where parents_id=#{parents_id}
+	</delete>
+	<delete id="deleteParents2" parameterType="str">
+		delete from Parents
+		where parents_id=#{parents_id}
+	</delete>
+	
+
+</mapper>
+
+
